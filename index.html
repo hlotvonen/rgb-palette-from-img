@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>title</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" />
+  </head>
+  <body>
+    <canvas id="canvas" height="256px" width="256px"></canvas>
+    <div id="output"></div>
+
+    <script type="text/javascript">
+      $(function() {
+        const canvas = document.getElementById("canvas");
+        const ctx = canvas.getContext("2d");
+        const img = new Image();
+        img.src = "/img/riso-goldblack-black.png";
+
+        canvas.style.width = 256 + "px";
+        canvas.style.height = 256 + "px";
+        var scale = window.devicePixelRatio; // Change to 1 on retina screens to see blurry canvas.
+        canvas.width = 256 * scale;
+        canvas.height = 256 * scale;
+
+        let colorArray = [];
+
+        img.onload = function() {
+          ctx.drawImage(img, 0, 0, 256, 256); // Or at whatever offset you like
+          console.log(ctx.getImageData(1, 0, 1, 1).data);
+          for (i = 0; i < 16; i++) {
+            for (j = 0; j < 16; j++) {
+              colorArray.push(
+                "[" +
+                  JSON.stringify(
+                    ctx.getImageData(j * 16, i * 16, 1, 1).data[0]
+                  ) +
+                  "," +
+                  JSON.stringify(
+                    ctx.getImageData(j * 16, i * 16, 1, 1).data[1]
+                  ) +
+                  "," +
+                  JSON.stringify(
+                    ctx.getImageData(j * 16, i * 16, 1, 1).data[2]
+                  ) +
+                  "],"
+              );
+            }
+          }
+          $("#output").html(colorArray);
+        };
+      });
+    </script>
+  </body>
+</html>
